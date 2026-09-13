@@ -1,0 +1,15 @@
+certifi==2026.2.25
+charset-normalizer==3.4.6
+Django==6.1.1
+django-cors-headers==4.9.0
+djangorestframework==3.18.1
+djangorestframework_simplejwt==5.5.1
+faker==40.38.0
+idna==3.11
+pillow==12.1.1
+psycopg2-binary==2.9.12
+PyJWT==2.7.0
+python-decouple==3.8
+requests==2.33.1
+stripe==15.6.1
+urllib3==2.6.3

@@ -1,0 +1,234 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { addComment, listComments, replyToComment, reportContent } from "../api/core";
+import { useAuth } from "../context/AuthContext";
+
+const MAX_COMMENT_LENGTH = 1000;
+
+export default function CommentsSection({ projectId }) {
+  const { user } = useAuth();
+  const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [newComment, setNewComment] = useState("");
+  const [posting, setPosting] = useState(false);
+  const [error, setError] = useState("");
+
+  const load = () => {
+    setLoading(true);
+    listComments(projectId)
+      .then(({ data }) => setComments(data.results))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(load, [projectId]);
+
+  const handlePost = async (e) => {
+    e.preventDefault();
+    const text = newComment.trim();
+    if (!text) return;
+    setError("");
+    setPosting(true);
+    try {
+      await addComment(projectId, text);
+      setNewComment("");
+      load();
+    } catch {
+      setError("مقدرناش ننشر التعليق دلوقتي.");
+    } finally {
+      setPosting(false);
+    }
+  };
+
+  return (
+    <section className="section" style={{ paddingBottom: 0 }}>
+      <h2 className="section-heading">التعليقات</h2>
+
+      {user ? (
+        <form onSubmit={handlePost} className="field" style={{ display: "flex", gap: 10 }}>
+          <input
+            className="input"
+            placeholder="اكتب تعليق..."
+            value={newComment}
+            maxLength={MAX_COMMENT_LENGTH}
+            onChange={(e) => setNewComment(e.target.value)}
+          />
+          <button className="btn btn-primary" disabled={posting || !newComment.trim()}>
+            نشر
+          </button>
+        </form>
+      ) : (
+        <p className="empty-state">
+          <Link to="/login">سجّل دخول</Link> عشان تقدر تعلّق.
+        </p>
+      )}
+
+      {error && <div className="form-alert">{error}</div>}
+      {loading && <p className="empty-state">بيتم التحميل...</p>}
+
+      {!loading &&
+        (comments.length ? (
+          <div>
+            {comments.map((c) => (
+              <CommentItem key={c.id} comment={c} projectId={projectId} onChanged={load} isAuthed={Boolean(user)} />
+            ))}
+          </div>
+        ) : (
+          <p className="empty-state">لسه مفيش تعليقات — كن أول واحد يعلّق.</p>
+        ))}
+    </section>
+  );
+}
+
+function CommentItem({ comment, onChanged, isAuthed }) {
+  const [replying, setReplying] = useState(false);
+  const [replyText, setReplyText] = useState("");
+  const [reporting, setReporting] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportSent, setReportSent] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  const submitReply = async (e) => {
+    e.preventDefault();
+    const text = replyText.trim();
+    if (!text) return;
+    setBusy(true);
+    try {
+      await replyToComment(comment.id, text);
+      setReplying(false);
+      setReplyText("");
+      onChanged();
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const submitReport = async (e) => {
+    e.preventDefault();
+    const reason = reportReason.trim();
+    if (!reason) return;
+    setBusy(true);
+    try {
+      await reportContent({ comment: comment.id, reason });
+      setReporting(false);
+      setReportReason("");
+      setReportSent(true);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="comment">
+      <span className="author">
+        {comment.user.first_name} {comment.user.last_name}
+      </span>
+      <span className="date"><bdi>{new Date(comment.created_at).toLocaleDateString("ar-EG")}</bdi></span>
+      <p className="text">{comment.text}</p>
+
+      {isAuthed && (
+        <div className="comment-actions">
+          <button onClick={() => setReplying((v) => !v)}>رد</button>
+          {reportSent ? (
+            <span style={{ color: "var(--success)" }}>تم الإبلاغ</span>
+          ) : (
+            <button className="danger" onClick={() => setReporting((v) => !v)}>
+              إبلاغ
+            </button>
+          )}
+        </div>
+      )}
+
+      {replying && (
+        <form className="reply-form" onSubmit={submitReply}>
+          <input
+            className="input"
+            placeholder="اكتب ردك..."
+            value={replyText}
+            onChange={(e) => setReplyText(e.target.value)}
+            autoFocus
+          />
+          <button className="btn btn-outline" disabled={busy || !replyText.trim()}>
+            إرسال
+          </button>
+        </form>
+      )}
+
+      {reporting && (
+        <form className="reply-form" onSubmit={submitReport}>
+          <input
+            className="input"
+            placeholder="سبب الإبلاغ..."
+            value={reportReason}
+            onChange={(e) => setReportReason(e.target.value)}
+            autoFocus
+          />
+          <button className="btn btn-outline" disabled={busy || !reportReason.trim()}>
+            إرسال البلاغ
+          </button>
+        </form>
+      )}
+
+      {comment.replies?.map((r) => (
+        <ReplyRow key={r.id} reply={r} isAuthed={isAuthed} />
+      ))}
+    </div>
+  );
+}
+
+function ReplyRow({ reply, isAuthed }) {
+  const [reporting, setReporting] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  const submitReport = async (e) => {
+    e.preventDefault();
+    const reason = reportReason.trim();
+    if (!reason) return;
+    setBusy(true);
+    try {
+      await reportContent({ comment: reply.id, reason });
+      setReporting(false);
+      setReportReason("");
+      setSent(true);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="reply">
+      <span className="author">
+        {reply.user.first_name} {reply.user.last_name}
+      </span>
+      <span className="date">
+        <bdi>{new Date(reply.created_at).toLocaleDateString("ar-EG")}</bdi>
+      </span>
+      <p className="text">{reply.text}</p>
+
+      {isAuthed && !sent && (
+        <div className="comment-actions">
+          <button className="danger" onClick={() => setReporting((v) => !v)}>
+            إبلاغ
+          </button>
+        </div>
+      )}
+      {sent && <p style={{ fontSize: "0.76rem", color: "var(--success)" }}>تم الإبلاغ.</p>}
+
+      {reporting && (
+        <form className="reply-form" onSubmit={submitReport}>
+          <input
+            className="input"
+            placeholder="سبب الإبلاغ..."
+            value={reportReason}
+            onChange={(e) => setReportReason(e.target.value)}
+            autoFocus
+          />
+          <button className="btn btn-outline" disabled={busy || !reportReason.trim()}>
+            إرسال البلاغ
+          </button>
+        </form>
+      )}
+    </div>
+  );
+}
