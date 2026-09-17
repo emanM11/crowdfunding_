@@ -13,3 +13,5 @@ python-decouple==3.8
 requests==2.33.1
 stripe==15.6.1
 urllib3==2.6.3
+gunicorn
+
