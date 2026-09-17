@@ -7,6 +7,9 @@ encoded here.
 from pathlib import Path
 from datetime import timedelta
 from decouple import config, Csv
+import dj_database_url
+
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -72,16 +75,24 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # ---------------------------------------------------------------------------
 # Database — PostgreSQL, configured via .env (see PROJECT_SPEC.md 3, 5)
 # ---------------------------------------------------------------------------
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default='crowdfunding_db'),
-        'USER': config('DB_USER', default='postgres'),
-        'PASSWORD': config('DB_PASSWORD', default='postgres'),
-        'HOST': config('DB_HOST', default='127.0.0.1'),
-        'PORT': config('DB_PORT', default='5432'),
+DATABASE_URL = config('DATABASE_URL', default='')
+
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL)
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('DB_NAME', default='crowdfunding_db'),
+            'USER': config('DB_USER', default='postgres'),
+            'PASSWORD': config('DB_PASSWORD', default='postgres'),
+            'HOST': config('DB_HOST', default='127.0.0.1'),
+            'PORT': config('DB_PORT', default='5432'),
+        }
+    }
+
 
 # ---------------------------------------------------------------------------
 # Custom user model — MUST be set before the first migration ever runs
