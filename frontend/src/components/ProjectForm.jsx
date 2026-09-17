@@ -53,7 +53,7 @@ export default function ProjectForm({ initial, onSubmit, submitLabel, existingIm
     const accepted = [];
     for (const file of files.slice(0, room)) {
       if (file.size > MAX_IMAGE_MB * 1024 * 1024) {
-        setErrors((err) => ({ ...err, images: `كل صورة لازم تكون أقل من ${MAX_IMAGE_MB}MB.` }));
+        setErrors((err) => ({ ...err, images: `Each image must be smaller than ${MAX_IMAGE_MB}MB.` }));
         continue;
       }
       accepted.push(file);
@@ -70,14 +70,14 @@ export default function ProjectForm({ initial, onSubmit, submitLabel, existingIm
 
   const validate = () => {
     const next = {};
-    if (!form.title.trim()) next.title = "مطلوب.";
-    if (!form.details.trim()) next.details = "مطلوب.";
-    if (!form.category) next.category = "اختر فئة.";
-    if (!(Number(form.total_target) > 0)) next.total_target = "لازم يكون رقم أكبر من صفر.";
-    if (!form.start_date) next.start_date = "مطلوب.";
-    if (!form.end_date) next.end_date = "مطلوب.";
+    if (!form.title.trim()) next.title = "Required.";
+    if (!form.details.trim()) next.details = "Required.";
+    if (!form.category) next.category = "Select a category.";
+    if (!(Number(form.total_target) > 0)) next.total_target = "Must be a number greater than zero.";
+    if (!form.start_date) next.start_date = "Required.";
+    if (!form.end_date) next.end_date = "Required.";
     if (form.start_date && form.end_date && form.end_date <= form.start_date) {
-      next.end_date = "لازم يكون بعد تاريخ البداية.";
+      next.end_date = "Must be after the start date.";
     }
     return next;
   };
@@ -112,7 +112,7 @@ export default function ProjectForm({ initial, onSubmit, submitLabel, existingIm
         setErrors(fieldErrors);
         setFormError(topLevel);
       } else {
-        setFormError("حصل خطأ غير متوقع. حاول تاني.");
+        setFormError("An unexpected error occurred. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -124,22 +124,22 @@ export default function ProjectForm({ initial, onSubmit, submitLabel, existingIm
       {formError && <div className="form-alert">{formError}</div>}
 
       <div className="field">
-        <label>عنوان المشروع</label>
+        <label>Project Title</label>
         <input className={`input${errors.title ? " has-error" : ""}`} value={form.title} onChange={update("title")} />
         {errors.title && <p className="field-error">{errors.title}</p>}
       </div>
 
       <div className="field">
-        <label>التفاصيل</label>
+        <label>Details</label>
         <textarea rows={6} className={`input${errors.details ? " has-error" : ""}`} value={form.details} onChange={update("details")} />
         {errors.details && <p className="field-error">{errors.details}</p>}
       </div>
 
       <div className="two-col">
         <div className="field">
-          <label>الفئة</label>
+          <label>Category</label>
           <select className={`input${errors.category ? " has-error" : ""}`} value={form.category} onChange={update("category")}>
-            <option value="">اختر فئة</option>
+            <option value="">Select a category</option>
             {categories.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
@@ -149,7 +149,7 @@ export default function ProjectForm({ initial, onSubmit, submitLabel, existingIm
           {errors.category && <p className="field-error">{errors.category}</p>}
         </div>
         <div className="field">
-          <label>الهدف المالي (ج.م)</label>
+          <label>Funding Goal (EGP)</label>
           <input type="number" min="1" step="0.01" className={`input${errors.total_target ? " has-error" : ""}`} value={form.total_target} onChange={update("total_target")} />
           {errors.total_target && <p className="field-error">{errors.total_target}</p>}
         </div>
@@ -157,19 +157,19 @@ export default function ProjectForm({ initial, onSubmit, submitLabel, existingIm
 
       <div className="two-col">
         <div className="field">
-          <label>تاريخ البداية</label>
+          <label>Start Date</label>
           <input type="date" className={`input${errors.start_date ? " has-error" : ""}`} value={form.start_date} onChange={update("start_date")} />
           {errors.start_date && <p className="field-error">{errors.start_date}</p>}
         </div>
         <div className="field">
-          <label>تاريخ النهاية</label>
+          <label>End Date</label>
           <input type="date" className={`input${errors.end_date ? " has-error" : ""}`} value={form.end_date} onChange={update("end_date")} />
           {errors.end_date && <p className="field-error">{errors.end_date}</p>}
         </div>
       </div>
 
       <div className="field">
-        <label>التاجات</label>
+        <label>Tags</label>
         <div className="tag-input-row">
           {tags.map((t) => (
             <span key={t} className="tag-chip" style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -181,16 +181,16 @@ export default function ProjectForm({ initial, onSubmit, submitLabel, existingIm
           ))}
         </div>
         <div style={{ display: "flex", gap: 8 }}>
-          <input className="input" placeholder="اكتب تاج واضغط Enter" value={tagInput} onChange={(e) => setTagInput(e.target.value)} onKeyDown={addTag} />
+          <input className="input" placeholder="Enter a tag and press Enter" value={tagInput} onChange={(e) => setTagInput(e.target.value)} onKeyDown={addTag} />
           <button type="button" className="btn btn-outline" onClick={addTag}>
-            إضافة
+            Add
           </button>
         </div>
       </div>
 
       {existingImages.length > 0 && (
         <div className="field">
-          <label>الصور الحالية</label>
+          <label>Current Images</label>
           <div className="image-preview-grid">
             {existingImages.map((img) => (
               <div className="thumb-wrap" key={img.id}>
@@ -202,9 +202,9 @@ export default function ProjectForm({ initial, onSubmit, submitLabel, existingIm
       )}
 
       <div className="field">
-        <label>{existingImages.length ? "أضف صور جديدة" : "صور المشروع"}</label>
+        <label>{existingImages.length ? "Add New Images" : "Project Images"}</label>
         <label htmlFor="images" className="image-drop" style={{ display: "block" }}>
-          اضغط لاختيار صور (حتى {MAX_IMAGES}، أقل من {MAX_IMAGE_MB}MB لكل صورة)
+          Click to choose images (up to {MAX_IMAGES}, less than {MAX_IMAGE_MB}MB per image)
         </label>
         <input id="images" type="file" accept="image/*" multiple onChange={handleFiles} style={{ display: "none" }} />
         {errors.images && <p className="field-error">{errors.images}</p>}
@@ -223,7 +223,7 @@ export default function ProjectForm({ initial, onSubmit, submitLabel, existingIm
       </div>
 
       <button className="btn btn-primary btn-block" disabled={loading}>
-        {loading ? "بيتم الحفظ..." : submitLabel}
+        {loading ? "Saving..." : submitLabel}
       </button>
     </form>
   );

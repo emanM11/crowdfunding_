@@ -10,63 +10,63 @@ export default function Footer() {
           <div className="footer-col footer-brand">
             <Link to="/" className="brand">
               <span className="dot" />
-              تكاتف
+              Takatof
             </Link>
             <p style={{ margin: "0 0 0", lineHeight: 1.9 }}>
-              منصة تمويل جماعي مصرية بتوحّد المساندين بأصحاب الأفكار —
-              من التعليم والصحة للبيئة والمشروعات الصغيرة.
+              An Egyptian crowdfunding platform that connects supporters with idea creators —
+              from education and healthcare to the environment and small businesses.
             </p>
           </div>
           <div className="footer-col">
-            <h4>استكشف</h4>
+            <h4>Explore</h4>
             <ul>
               <li>
-                <Link to="/projects">كل المشاريع</Link>
+                <Link to="/projects">All Projects</Link>
               </li>
               {user && (
                 <>
                   <li>
-                    <Link to="/my-projects">مشاريعي</Link>
+                    <Link to="/my-projects">My Projects</Link>
                   </li>
                   <li>
-                    <Link to="/my-donations">تبرعاتي</Link>
+                    <Link to="/my-donations">My Donations</Link>
                   </li>
                 </>
               )}
               <li>
-                <Link to="/projects/new">ابدأ حملة</Link>
+                <Link to="/projects/new">Start a Campaign</Link>
               </li>
             </ul>
           </div>
           <div className="footer-col">
-            <h4>حسابك</h4>
+            <h4>Your Account</h4>
             <ul>
               {user ? (
                 <>
                   <li>
-                    <Link to="/profile">الملف الشخصي</Link>
+                    <Link to="/profile">Profile</Link>
                   </li>
                   <li>
-                    <Link to="/profile">إعدادات الحساب</Link>
+                    <Link to="/profile">Account Settings</Link>
                   </li>
                 </>
               ) : (
                 <>
                   <li>
-                    <Link to="/login">تسجيل الدخول</Link>
+                    <Link to="/login">Log In</Link>
                   </li>
                   <li>
-                    <Link to="/register">إنشاء حساب</Link>
+                    <Link to="/register">Create Account</Link>
                   </li>
                 </>
               )}
             </ul>
           </div>
           <div className="footer-col">
-            <h4>تواصل</h4>
+            <h4>Contact</h4>
             <ul>
               <li>
-                <span>القاهرة، مصر</span>
+                <span>Cairo, Egypt</span>
               </li>
               <li>
                 <span>support@takaful.example</span>
@@ -75,8 +75,8 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <span>منصة تكاتف — تمويل جماعي للمشاريع في مصر.</span>
-          <span>© {new Date().getFullYear()} تكاتف. كل الحقوق محفوظة.</span>
+          <span>Takatof — Crowdfunding platform for projects in Egypt.</span>
+          <span>© {new Date().getFullYear()} Takatof. All rights reserved.</span>
         </div>
       </div>
     </footer>

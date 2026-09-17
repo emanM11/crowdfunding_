@@ -4,17 +4,23 @@ import { activate } from "../api/auth";
 
 export default function Activation() {
   const { uid, token } = useParams();
-  const [status, setStatus] = useState("loading"); // loading | success | error
+  const [status, setStatus] = useState("loading");
 
   useEffect(() => {
     let cancelled = false;
+
     activate(uid, token)
       .then(() => {
-        if (!cancelled) setStatus("success");
+        if (!cancelled) {
+          setStatus("success");
+        }
       })
       .catch(() => {
-        if (!cancelled) setStatus("error");
+        if (!cancelled) {
+          setStatus("error");
+        }
       });
+
     return () => {
       cancelled = true;
     };
@@ -22,29 +28,40 @@ export default function Activation() {
 
   return (
     <div className="page" style={{ maxWidth: 480, textAlign: "center" }}>
-      {status === "loading" && <p>بنفعّل حسابك...</p>}
+      {status === "loading" && (
+        <p>Verifying your account...</p>
+      )}
 
       {status === "success" && (
         <>
-          <h1 className="section-heading">اتفعّل حسابك بنجاح 🎉</h1>
+          <h1 className="section-heading">
+            Account Activated Successfully
+          </h1>
+
           <p style={{ color: "var(--ink-600)", marginBottom: 24 }}>
-            تقدر تسجّل دخول دلوقتي وتبدأ تستخدم تكاتف.
+            Your account is now active. You can sign in and start discovering
+            projects, supporting ideas, and making a difference.
           </p>
+
           <Link to="/login" className="btn btn-primary">
-            تسجيل الدخول
+            Sign In
           </Link>
         </>
       )}
 
       {status === "error" && (
         <>
-          <h1 className="section-heading">رابط التفعيل مش شغال</h1>
+          <h1 className="section-heading">
+            Activation Could Not Be Completed
+          </h1>
+
           <p style={{ color: "var(--ink-600)", marginBottom: 24 }}>
-            ممكن يكون الرابط انتهت صلاحيته أو اتفعّل الحساب من قبل. جرب تسجّل
-            دخول، ولو المشكلة استمرت اعمل حساب جديد.
+            This activation link may have expired or your account may already
+            be activated. Please try signing in or register again if needed.
           </p>
+
           <Link to="/login" className="btn btn-outline">
-            الرجوع لتسجيل الدخول
+            Go to Sign In
           </Link>
         </>
       )}

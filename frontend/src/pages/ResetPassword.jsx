@@ -19,11 +19,11 @@ export default function ResetPassword() {
     setErrors({});
 
     if (password.length < 8) {
-      setErrors({ password: "8 حروف على الأقل." });
+      setErrors({ password: "At least 8 characters." });
       return;
     }
     if (password !== confirmPassword) {
-      setErrors({ confirm_password: "كلمتا المرور مش متطابقتين." });
+      setErrors({ confirm_password: "Passwords do not match." });
       return;
     }
 
@@ -49,7 +49,7 @@ export default function ResetPassword() {
         setErrors(fieldErrors);
         setFormError(topLevel && !fieldErrors.confirm_password ? topLevel : "");
       } else {
-        setFormError("حصل خطأ غير متوقع. حاول تاني.");
+        setFormError("An unexpected error occurred. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -59,21 +59,21 @@ export default function ResetPassword() {
   return (
     <div className="auth-shell">
       <div className="auth-side">
-        <h1>اختار كلمة مرور جديدة.</h1>
-        <p>خليها قوية — 8 حروف على الأقل، وميكونش رقم بس أو باسورد شائع.</p>
+        <h1>Choose a new password.</h1>
+        <p>Make it strong — at least 8 characters, and not only numbers or a common password.</p>
       </div>
       <div className="auth-form-wrap">
         <div className="auth-card">
-          <h2>كلمة مرور جديدة</h2>
+          <h2>New Password</h2>
 
           {done ? (
-            <div className="form-alert success">اتغيّرت كلمة المرور بنجاح، هنودّيك لصفحة الدخول...</div>
+            <div className="form-alert success">Your password has been changed successfully. Redirecting you to the login page...</div>
           ) : (
             <form onSubmit={handleSubmit} noValidate>
               {formError && <div className="form-alert">{formError}</div>}
 
               <div className="field">
-                <label>كلمة المرور الجديدة</label>
+                <label>New Password</label>
                 <div className="password-field">
                   <input
                     type={showPassword ? "text" : "password"}
@@ -83,14 +83,14 @@ export default function ResetPassword() {
                     autoFocus
                   />
                   <button type="button" className="password-toggle" onClick={() => setShowPassword((s) => !s)}>
-                    {showPassword ? "إخفاء" : "إظهار"}
+                    {showPassword ? "Hide" : "Show"}
                   </button>
                 </div>
                 {errors.password && <p className="field-error">{errors.password}</p>}
               </div>
 
               <div className="field">
-                <label>تأكيد كلمة المرور</label>
+                <label>Confirm Password</label>
                 <input
                   type={showPassword ? "text" : "password"}
                   className={`input${errors.confirm_password ? " has-error" : ""}`}
@@ -101,13 +101,13 @@ export default function ResetPassword() {
               </div>
 
               <button className="btn btn-primary btn-block" disabled={loading}>
-                {loading ? "بيتم الحفظ..." : "حفظ كلمة المرور الجديدة"}
+                {loading ? "Saving..." : "Save New Password"}
               </button>
             </form>
           )}
 
           <p className="auth-switch">
-            <Link to="/login">الرجوع لتسجيل الدخول</Link>
+            <Link to="/login">Back to Login</Link>
           </p>
         </div>
       </div>

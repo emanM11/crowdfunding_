@@ -33,7 +33,7 @@ export default function CommentsSection({ projectId }) {
       setNewComment("");
       load();
     } catch {
-      setError("مقدرناش ننشر التعليق دلوقتي.");
+      setError("We couldn't post the comment right now.");
     } finally {
       setPosting(false);
     }
@@ -41,29 +41,29 @@ export default function CommentsSection({ projectId }) {
 
   return (
     <section className="section" style={{ paddingBottom: 0 }}>
-      <h2 className="section-heading">التعليقات</h2>
+      <h2 className="section-heading">Comments</h2>
 
       {user ? (
         <form onSubmit={handlePost} className="field" style={{ display: "flex", gap: 10 }}>
           <input
             className="input"
-            placeholder="اكتب تعليق..."
+            placeholder="Write a comment..."
             value={newComment}
             maxLength={MAX_COMMENT_LENGTH}
             onChange={(e) => setNewComment(e.target.value)}
           />
           <button className="btn btn-primary" disabled={posting || !newComment.trim()}>
-            نشر
+            Post
           </button>
         </form>
       ) : (
         <p className="empty-state">
-          <Link to="/login">سجّل دخول</Link> عشان تقدر تعلّق.
+          <Link to="/login">Log In</Link> to leave a comment.
         </p>
       )}
 
       {error && <div className="form-alert">{error}</div>}
-      {loading && <p className="empty-state">بيتم التحميل...</p>}
+      {loading && <p className="empty-state">Loading...</p>}
 
       {!loading &&
         (comments.length ? (
@@ -73,7 +73,7 @@ export default function CommentsSection({ projectId }) {
             ))}
           </div>
         ) : (
-          <p className="empty-state">لسه مفيش تعليقات — كن أول واحد يعلّق.</p>
+          <p className="empty-state">No comments yet — be the first to comment.</p>
         ))}
     </section>
   );
@@ -127,12 +127,12 @@ function CommentItem({ comment, onChanged, isAuthed }) {
 
       {isAuthed && (
         <div className="comment-actions">
-          <button onClick={() => setReplying((v) => !v)}>رد</button>
+          <button onClick={() => setReplying((v) => !v)}>Reply</button>
           {reportSent ? (
-            <span style={{ color: "var(--success)" }}>تم الإبلاغ</span>
+            <span style={{ color: "var(--success)" }}>Reported</span>
           ) : (
             <button className="danger" onClick={() => setReporting((v) => !v)}>
-              إبلاغ
+              Report
             </button>
           )}
         </div>
@@ -142,13 +142,13 @@ function CommentItem({ comment, onChanged, isAuthed }) {
         <form className="reply-form" onSubmit={submitReply}>
           <input
             className="input"
-            placeholder="اكتب ردك..."
+            placeholder="Write your reply..."
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
             autoFocus
           />
           <button className="btn btn-outline" disabled={busy || !replyText.trim()}>
-            إرسال
+            Send
           </button>
         </form>
       )}
@@ -157,13 +157,13 @@ function CommentItem({ comment, onChanged, isAuthed }) {
         <form className="reply-form" onSubmit={submitReport}>
           <input
             className="input"
-            placeholder="سبب الإبلاغ..."
+            placeholder="Reason for reporting..."
             value={reportReason}
             onChange={(e) => setReportReason(e.target.value)}
             autoFocus
           />
           <button className="btn btn-outline" disabled={busy || !reportReason.trim()}>
-            إرسال البلاغ
+            Submit Report
           </button>
         </form>
       )}
@@ -209,23 +209,23 @@ function ReplyRow({ reply, isAuthed }) {
       {isAuthed && !sent && (
         <div className="comment-actions">
           <button className="danger" onClick={() => setReporting((v) => !v)}>
-            إبلاغ
+            Report
           </button>
         </div>
       )}
-      {sent && <p style={{ fontSize: "0.76rem", color: "var(--success)" }}>تم الإبلاغ.</p>}
+      {sent && <p style={{ fontSize: "0.76rem", color: "var(--success)" }}>Reported.</p>}
 
       {reporting && (
         <form className="reply-form" onSubmit={submitReport}>
           <input
             className="input"
-            placeholder="سبب الإبلاغ..."
+            placeholder="Reason for reporting..."
             value={reportReason}
             onChange={(e) => setReportReason(e.target.value)}
             autoFocus
           />
           <button className="btn btn-outline" disabled={busy || !reportReason.trim()}>
-            إرسال البلاغ
+            Submit Report
           </button>
         </form>
       )}

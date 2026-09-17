@@ -6,21 +6,31 @@ import { notifySuccess } from "../lib/toast";
 export default function CreateProject() {
   const navigate = useNavigate();
 
-  const handleSubmit = async (formData) => {
-    const { data } = await createProject(formData);
-    notifySuccess("تم نشر مشروعك بنجاح.");
-    navigate(`/projects/${data.id}`);
-  };
+  async function handleSubmit(formData) {
+    try {
+      const response = await createProject(formData);
+
+      notifySuccess("Project published successfully.");
+      navigate("/projects/" + response.data.id);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <div>
       <div className="container" style={{ paddingTop: 40 }}>
-        <h1 className="section-heading">ابدأ حملة جديدة</h1>
+        <h1 className="section-heading">Create a New Campaign</h1>
+
         <p style={{ color: "var(--ink-600)", marginTop: -14 }}>
-          اكتب تفاصيل مشروعك بوضوح — كل حاجة تقدر تعدّلها بعدين.
+          Add the details of your project and share your idea with the community.
         </p>
       </div>
-      <ProjectForm onSubmit={handleSubmit} submitLabel="نشر المشروع" />
+
+      <ProjectForm
+        onSubmit={handleSubmit}
+        submitLabel="Publish Project"
+      />
     </div>
   );
 }

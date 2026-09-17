@@ -53,7 +53,7 @@ export default function HeroScene({ featured, featuredPct }) {
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
       >
         <HeartHandshake size={16} />
-        {featured ? `إنجاز ${featuredPct}%` : "دعم بلا حدود"}
+        {featured ? `Progress ${featuredPct}%` : "Unlimited Support"}
       </motion.span>
       <motion.span
         className="hero-tag t2"
@@ -61,7 +61,7 @@ export default function HeroScene({ featured, featuredPct }) {
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
       >
         <TrendingUp size={16} />
-        تمويل جماعي مصري
+        Egyptian Crowdfunding
       </motion.span>
       <motion.span
         className="hero-tag t3"
@@ -69,7 +69,7 @@ export default function HeroScene({ featured, featuredPct }) {
         transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
       >
         <Users size={16} />
-        آلاف المساندين
+        Thousands of Supporters
       </motion.span>
     </div>
   );

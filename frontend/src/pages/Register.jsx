@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { register } from "../api/auth";
-import FacebookLoginButton from "../components/FacebookLoginButton";
 
 const EGYPT_PHONE = /^(010|011|012|015)\d{8}$/;
 
@@ -42,7 +41,7 @@ export default function Register() {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
-      setErrors((err) => ({ ...err, profile_picture: "الصورة أكبر من 5 ميجابايت." }));
+      setErrors((err) => ({ ...err, profile_picture: "The image is larger than 5 MB." }));
       return;
     }
     setAvatar(file);
@@ -51,15 +50,15 @@ export default function Register() {
 
   const validateClientSide = () => {
     const next = {};
-    if (!form.first_name.trim()) next.first_name = "مطلوب.";
-    if (!form.last_name.trim()) next.last_name = "مطلوب.";
-    if (!/^\S+@\S+\.\S+$/.test(form.email)) next.email = "إيميل غير صحيح.";
+    if (!form.first_name.trim()) next.first_name = "Required.";
+    if (!form.last_name.trim()) next.last_name = "Required.";
+    if (!/^\S+@\S+\.\S+$/.test(form.email)) next.email = "Invalid email.";
     if (!EGYPT_PHONE.test(form.phone_number)) {
-      next.phone_number = "رقم موبايل مصري غير صحيح (010/011/012/015 و11 رقم).";
+      next.phone_number = "Invalid Egyptian mobile number (010/011/012/015 and 11 digits).";
     }
-    if (form.password.length < 8) next.password = "8 حروف على الأقل.";
+    if (form.password.length < 8) next.password = "At least 8 characters.";
     if (form.password !== form.confirm_password) {
-      next.confirm_password = "كلمتا المرور مش متطابقتين.";
+      next.confirm_password = "Passwords do not match.";
     }
     return next;
   };
@@ -102,9 +101,9 @@ export default function Register() {
       if (err.response?.status === 400) {
         applyServerErrors(err.response.data);
       } else if (err.response?.status === 429) {
-        setFormError("محاولات كتير في وقت قصير — جرب تاني بعد شوية.");
+        setFormError("Too many attempts in a short time — please try again later.");
       } else {
-        setFormError("حصل خطأ غير متوقع. حاول تاني.");
+        setFormError("An unexpected error occurred. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -117,13 +116,13 @@ export default function Register() {
         <AuthSide />
         <div className="auth-form-wrap">
           <div className="auth-card">
-            <h2>راجع إيميلك</h2>
+            <h2>Check Your Email</h2>
             <div className="form-alert success">
-              بعتنالك رابط تفعيل على <strong>{form.email}</strong>. لازم تفعّل
-              حسابك قبل ما تقدر تسجّل دخول — الرابط صالح لمدة 24 ساعة.
+              We sent you an activation link to <strong>{form.email}</strong>. You must activate
+              your account before you can log in — the link is valid for 24 hours.
             </div>
             <Link to="/login" className="btn btn-outline btn-block">
-              الرجوع لتسجيل الدخول
+              Back to Login
             </Link>
           </div>
         </div>
@@ -136,18 +135,18 @@ export default function Register() {
       <AuthSide />
       <div className="auth-form-wrap">
         <form className="auth-card" onSubmit={handleSubmit} noValidate>
-          <h2>إنشاء حساب</h2>
-          <p className="subtitle">ابدأ حملتك أو ادعم مشروع بيفرق.</p>
+          <h2>Create Account</h2>
+          <p className="subtitle">Start your campaign or support a project that makes a difference.</p>
 
           {formError && <div className="form-alert">{formError}</div>}
 
           <div className="avatar-picker">
             <div className="avatar-preview">
-              {avatarPreview ? <img src={avatarPreview} alt="" /> : "صورة"}
+              {avatarPreview ? <img src={avatarPreview} alt="" /> : "Photo"}
             </div>
             <div>
               <label htmlFor="avatar" className="btn btn-outline" style={{ cursor: "pointer" }}>
-                اختر صورة (اختياري)
+                Choose Photo (Optional)
               </label>
               <input
                 id="avatar"
@@ -161,23 +160,23 @@ export default function Register() {
           </div>
 
           <div className="two-col">
-            <Field label="الاسم الأول" error={errors.first_name}>
+            <Field label="First Name" error={errors.first_name}>
               <input className={`input${errors.first_name ? " has-error" : ""}`} value={form.first_name} onChange={update("first_name")} autoComplete="given-name" />
             </Field>
-            <Field label="الاسم الأخير" error={errors.last_name}>
+            <Field label="Last Name" error={errors.last_name}>
               <input className={`input${errors.last_name ? " has-error" : ""}`} value={form.last_name} onChange={update("last_name")} autoComplete="family-name" />
             </Field>
           </div>
 
-          <Field label="الإيميل" error={errors.email}>
+          <Field label="Email" error={errors.email}>
             <input type="email" className={`input${errors.email ? " has-error" : ""}`} value={form.email} onChange={update("email")} autoComplete="email" />
           </Field>
 
-          <Field label="رقم الموبايل" error={errors.phone_number}>
+          <Field label="Mobile Number" error={errors.phone_number}>
             <input className={`input${errors.phone_number ? " has-error" : ""}`} value={form.phone_number} onChange={update("phone_number")} placeholder="01xxxxxxxxx" autoComplete="tel" />
           </Field>
 
-          <Field label="كلمة المرور" error={errors.password}>
+          <Field label="Password" error={errors.password}>
             <div className="password-field">
               <input
                 type={showPassword ? "text" : "password"}
@@ -187,13 +186,13 @@ export default function Register() {
                 autoComplete="new-password"
               />
               <button type="button" className="password-toggle" onClick={() => setShowPassword((s) => !s)}>
-                {showPassword ? "إخفاء" : "إظهار"}
+                {showPassword ? "Hide" : "Show"}
               </button>
             </div>
-            <p className="hint">8 حروف على الأقل، وميكونش رقم بس أو باسورد شائع.</p>
+            <p className="hint">At least 8 characters, and not only numbers or a common password.</p>
           </Field>
 
-          <Field label="تأكيد كلمة المرور" error={errors.confirm_password}>
+          <Field label="Confirm Password" error={errors.confirm_password}>
             <input
               type={showPassword ? "text" : "password"}
               className={`input${errors.confirm_password ? " has-error" : ""}`}
@@ -204,15 +203,11 @@ export default function Register() {
           </Field>
 
           <button className="btn btn-primary btn-block" disabled={loading}>
-            {loading ? "بيتم الإنشاء..." : "إنشاء الحساب"}
+            {loading ? "Creating..." : "Create Account"}
           </button>
 
-          <div style={{ margin: "16px 0" }}>
-            <FacebookLoginButton />
-          </div>
-
           <p className="auth-switch">
-            عندك حساب بالفعل؟ <Link to="/login">سجّل دخول</Link>
+            Already have an account? <Link to="/login">Log In</Link>
           </p>
         </form>
       </div>
@@ -233,10 +228,10 @@ function Field({ label, error, children }) {
 function AuthSide() {
   return (
     <div className="auth-side">
-      <h1>مشروعك ميحتاجش يكون كبير عشان يبدأ فرق.</h1>
+      <h1>Your project doesn't have to be big to make a difference.</h1>
       <p>
-        تكاتف بيوصّل أصحاب الأفكار بالناس اللي مستعدة تدعمهم — تعليم، صحة،
-        أو أي فكرة بتحل مشكلة حقيقية. سجّل واستكشف المشاريع اللي شغالة دلوقتي.
+        Takatof connects idea creators with people ready to support them — education, health,
+        or any idea that solves a real problem. Sign up and explore the projects currently running.
       </p>
     </div>
   );

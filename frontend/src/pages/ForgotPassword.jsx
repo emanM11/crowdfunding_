@@ -12,14 +12,18 @@ export default function ForgotPassword() {
     e.preventDefault();
     setError("");
     setLoading(true);
+
     try {
       await requestPasswordReset(email);
       // Always shown regardless of whether the email exists — the backend
       // deliberately returns the same response either way.
       setSent(true);
     } catch (err) {
-      if (err.response?.status === 429) setError("محاولات كتير — جرب تاني بعد شوية.");
-      else setError("حصل خطأ غير متوقع. حاول تاني.");
+      if (err.response?.status === 429) {
+        setError("Too many attempts. Please try again later.");
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -28,33 +32,53 @@ export default function ForgotPassword() {
   return (
     <div className="auth-shell">
       <div className="auth-side">
-        <h1>نسيت كلمة المرور؟</h1>
-        <p>مفيش مشكلة، اكتب إيميلك وهنبعتلك رابط تختار بيه كلمة مرور جديدة.</p>
+        <h1>Forgot Your Password?</h1>
+        <p>
+          No problem. Enter your email address and we will send you a link to
+          create a new password.
+        </p>
       </div>
+
       <div className="auth-form-wrap">
         <div className="auth-card">
-          <h2>استعادة كلمة المرور</h2>
+          <h2>Reset Your Password</h2>
 
           {sent ? (
             <div className="form-alert success">
-              لو الإيميل ده مسجّل عندنا، وصلك رابط استعادة كلمة المرور — الرابط صالح لمدة 24 ساعة.
+              If this email is registered with us, a password reset link has
+              been sent to you. The link is valid for 24 hours.
             </div>
           ) : (
             <form onSubmit={handleSubmit} noValidate>
-              <p className="subtitle">هنبعتلك رابط استعادة على إيميلك.</p>
+              <p className="subtitle">
+                We will send a password reset link to your email address.
+              </p>
+
               {error && <div className="form-alert">{error}</div>}
+
               <div className="field">
-                <label>الإيميل</label>
-                <input type="email" className="input" value={email} onChange={(e) => setEmail(e.target.value)} required autoFocus />
+                <label>Email Address</label>
+                <input
+                  type="email"
+                  className="input"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  autoFocus
+                />
               </div>
-              <button className="btn btn-primary btn-block" disabled={loading}>
-                {loading ? "بيتم الإرسال..." : "إرسال رابط الاستعادة"}
+
+              <button
+                className="btn btn-primary btn-block"
+                disabled={loading}
+              >
+                {loading ? "Sending..." : "Send Reset Link"}
               </button>
             </form>
           )}
 
           <p className="auth-switch">
-            رجعت فاكر كلمة المرور؟ <Link to="/login">تسجيل الدخول</Link>
+            Remember your password? <Link to="/login">Sign In</Link>
           </p>
         </div>
       </div>

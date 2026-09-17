@@ -34,19 +34,19 @@ export default function SearchResults() {
   return (
     <div className="page">
       <div className="page-header">
-        <h1>نتائج البحث عن "{q}"</h1>
+        <h1>Search Results for "{q}"</h1>
       </div>
 
       {error && (
         <div className="err-state">
-          <h3>مقدرناش نكمل البحث</h3>
-          <p>حصلت مشكلة في الاتصال، حاول تاني بعد شوية.</p>
+          <h3>We couldn't complete the search</h3>
+          <p>There was a connection problem. Please try again later.</p>
           <button className="btn btn-outline" onClick={() => setRetry((r) => r + 1)}>
-            إعادة المحاولة
+            Try Again
           </button>
         </div>
       )}
-      {loading && <p className="empty-state">بيتم البحث...</p>}
+      {loading && <p className="empty-state">Searching...</p>}
 
       {!loading && result && (
         <>
@@ -57,7 +57,7 @@ export default function SearchResults() {
               ))}
             </div>
           ) : (
-            <p className="empty-state">مفيش نتايج مطابقة.</p>
+            <p className="empty-state">No matching results found.</p>
           )}
           <Pagination
             page={page}

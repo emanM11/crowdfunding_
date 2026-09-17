@@ -8,7 +8,7 @@ export default function StarRating({ value, onRate, disabled }) {
           className={`star-btn${star <= Math.round(value || 0) ? " filled" : ""}`}
           disabled={disabled}
           onClick={() => onRate?.(star)}
-          aria-label={`${star} من 5`}
+          aria-label={`${star} out of 5`}
         >
           ★
         </button>

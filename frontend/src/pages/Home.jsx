@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -37,27 +38,27 @@ function StatsBand({ stats }) {
       <div className="container stats-grid">
         <div className="stat-item">
           <strong>
-            <CountUp value={raisedEgp} /> ج.م
+            <CountUp value={raisedEgp} /> EGP
           </strong>
-          <span>تم تدبيره بنجاح</span>
+          <span>Successfully Raised</span>
         </div>
         <div className="stat-item">
           <strong>
             <CountUp value={stats.projects} />
           </strong>
-          <span>مشروع منشور</span>
+          <span>Published Projects</span>
         </div>
         <div className="stat-item">
           <strong>
             <CountUp value={stats.backers} />
           </strong>
-          <span>مشارك مساند</span>
+          <span>Supporters</span>
         </div>
         <div className="stat-item">
           <strong>
             <CountUp value={stats.categories} />
           </strong>
-          <span>فئة استكشاف</span>
+          <span>Categories</span>
         </div>
       </div>
     </div>
@@ -77,7 +78,7 @@ function ProjectScroller({ title, eyebrow, projects }) {
           {title}
         </h2>
         <Link to="/projects" className="btn btn-outline" style={{ marginBottom: 8 }}>
-          عرض الكل
+          View All
         </Link>
       </div>
       <motion.div
@@ -168,27 +169,27 @@ export default function Home() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.15, duration: 0.4 }}
             >
-              منصة مصرية للتمويل الجماعي
+              An Egyptian Crowdfunding Platform
             </motion.span>
-            <h1>ادعم فكرة، أو شارك واحدة تستاهل.</h1>
+            <h1>Support an Idea, or Help Bring One to Life.</h1>
             <p>
-              تكاتف منصة تمويل جماعي لمشاريع بتحصل في مصر فعلاً — تعليم، صحة،
-              ومبادرات مجتمعية بيقودها ناس زيك.
+              Takatof is a crowdfunding platform for real projects in Egypt — education, healthcare,
+              and community initiatives led by people like you.
             </p>
             <form onSubmit={handleSearch} className="hero-actions">
               <div className="hero-search">
                 <input
                   className="input"
-                  placeholder="دوّر باسم مشروع أو تاج..."
+                  placeholder="Search by project name or tag..."
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                 />
                 <button className="btn btn-primary" type="submit">
-                  بحث
+                  Search
                 </button>
               </div>
               <Link to="/projects" className="btn btn-ghost">
-                كل المشاريع
+                Explore Projects
               </Link>
             </form>
           </motion.div>
@@ -209,7 +210,7 @@ export default function Home() {
       {loadError && (
         <div className="container section">
           <div className="form-alert">
-            مقدرناش نجيب بيانات الصفحة الرئيسية دلوقتي. حاول تحدّث الصفحة.
+            We couldn't load the homepage data right now. Please refresh the page.
           </div>
         </div>
       )}
@@ -220,14 +221,14 @@ export default function Home() {
         <>
           {data.stats && <StatsBand stats={data.stats} />}
 
-          <ProjectScroller title="مشاريع مميزة" eyebrow="تستاهل الدعم" projects={data.featured} />
-          <ProjectScroller title="الأعلى تقييمًا الآن" eyebrow="اختيارات الجمهور" projects={data.top_rated} />
-          <ProjectScroller title="أحدث المشاريع" eyebrow="جديد على المنصة" projects={data.latest} />
+          <ProjectScroller title="Featured Projects" eyebrow="Worth Supporting" projects={data.featured} />
+          <ProjectScroller title="Top-Rated Projects" eyebrow="Community Favorites" projects={data.top_rated} />
+          <ProjectScroller title="Latest Projects" eyebrow="New on the Platform" projects={data.latest} />
 
           <Reveal className="container section">
             <h2 className="section-heading">
-              استكشف حسب الفئة
-              <small> من الزراعة لفي البرمجة — فيه مشروع لكل الاهتمامات.</small>
+              Explore by Category
+              <small> From agriculture to technology — there is a project for every interest.</small>
             </h2>
             {data.categories.length ? (
               <div className="category-grid stagger">
@@ -248,59 +249,27 @@ export default function Home() {
                     <span>
                       <span className="cc-name">{c.name}</span>
                       <br />
-                      <span className="cc-slug">تصفح /{c.slug}</span>
+                      <span className="cc-slug">Browse /{c.slug}</span>
                     </span>
                   </Link>
                 ))}
               </div>
             ) : (
-              <p className="empty-state">لسه مفيش فئات مضافة.</p>
+              <p className="empty-state">No categories have been added yet.</p>
             )}
-          </Reveal>
-
-          <Reveal className="container section">
-            <h2 className="section-heading" style={{ textAlign: "center" }}>
-              تكاتف شغال إزاي؟
-            </h2>
-            <p
-              className="eyebrow"
-              style={{ marginInline: "auto", display: "inline-block", textAlign: "center", position: "relative", insetInlineStart: "50%", transform: "translateX(50%)" }}
-            >
-              خطوات بسيطة
-            </p>
-            <div className="steps-grid stagger">
-              <div className="step">
-                <span className="step-num">١</span>
-                <span className="step-icon">ادخل وانشر فكرتك</span>
-                <h3>أنشئ حملتك</h3>
-                <p>حدّد هدفك المالي، وارفع صور وفيديو يعرّفوا الناس بمشروعك خلال دقايق.</p>
-              </div>
-              <div className="step">
-                <span className="step-num">٢</span>
-                <span className="step-icon">شارك في حملة بتشجعها</span>
-                <h3>ادعم غيرك</h3>
-                <p>اختر مشروع مناسب، وساهم بالمبلغ اللي يناسبك — حتى أصغر مساهمة بتفرق.</p>
-              </div>
-              <div className="step">
-                <span className="step-num">٣</span>
-                <span className="step-icon">تابع أثرك</span>
-                <h3>تابع النتائج</h3>
-                <p>راجع تقدّم الحملات، وقيّم المشاريع اللي ساندتها كي يستفيد الجميع من خبرتك.</p>
-              </div>
-            </div>
           </Reveal>
 
           <div className="container section">
             <Reveal className="dark-section">
               <div className="cta-band">
-                <h2>عندك فكرة تستاهل تشوف النور؟</h2>
-                <p>ابدأ حملتك اليوم، وخلّي مجتمع من المساندين يقف جنبك حتى تنفيذها.</p>
+                <h2>Have an Idea Worth Bringing to Life?</h2>
+                <p>Start your campaign today and build a community of supporters around your idea.</p>
                 <div className="hero-actions">
                   <Link to="/projects/new" className="btn btn-primary">
-                    ابدأ حملتك
+                    Start Your Campaign
                   </Link>
                   <Link to="/projects" className="btn btn-ghost">
-                    استكشف الأول
+                    Explore First
                   </Link>
                 </div>
               </div>
@@ -311,3 +280,4 @@ export default function Home() {
     </>
   );
 }
+

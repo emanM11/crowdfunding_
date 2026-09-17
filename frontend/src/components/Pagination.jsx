@@ -7,15 +7,15 @@ export default function Pagination({ page, setPage, hasNext, hasPrevious, loadin
         disabled={!hasPrevious || loading}
         onClick={() => setPage((p) => Math.max(1, p - 1))}
       >
-        السابق
+        Previous
       </button>
-      <span>صفحة {page}</span>
+      <span>Page {page}</span>
       <button
         className="btn btn-outline"
         disabled={!hasNext || loading}
         onClick={() => setPage((p) => p + 1)}
       >
-        التالي
+        Next
       </button>
     </div>
   );

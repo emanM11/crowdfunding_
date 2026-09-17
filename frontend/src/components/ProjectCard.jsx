@@ -20,7 +20,7 @@ export default function ProjectCard({ project }) {
         {project.thumbnail ? (
           <img src={project.thumbnail} alt={project.title} loading="lazy" />
         ) : (
-          "لا توجد صورة"
+          "No Image Available"
         )}
         <div className="badges">
           {project.category ? (
@@ -28,8 +28,8 @@ export default function ProjectCard({ project }) {
           ) : (
             <span />
           )}
-          {project.is_featured && <span className="featured-chip">مميز</span>}
-          {ended && <span className="ended-chip">انتهت المساهمات</span>}
+          {project.is_featured && <span className="featured-chip">Featured</span>}
+          {ended && <span className="ended-chip">Contributions Ended</span>}
         </div>
       </div>
       <div className="body">
@@ -39,11 +39,11 @@ export default function ProjectCard({ project }) {
         </div>
         <div className="meta">
           <span>
-            <bdi>{raised.toLocaleString("en-US")}</bdi> ج.م
+            <bdi>{raised.toLocaleString("en-US")}</bdi> EGP
           </span>
           {days !== null && days !== undefined ? (
             <span>
-              متبقي <bdi>{days}</bdi> يوم
+              <bdi>{days}</bdi> days left
             </span>
           ) : (
             <span className="pct">
@@ -52,7 +52,7 @@ export default function ProjectCard({ project }) {
           )}
         </div>
         <span className="cta-link">
-          شاهد المشروع
+          View Project
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M15 18l-6-6 6-6" />
           </svg>

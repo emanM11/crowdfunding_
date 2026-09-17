@@ -17,12 +17,12 @@ const PIE_COLORS = [
 ];
 
 const STATUS_META = {
-  successful: { label: "نجحت", className: "chip-success" },
-  pending: { label: "معلقة", className: "chip-pending" },
-  failed: { label: "فشلت", className: "chip-failed" },
+  successful: { label: "Successful", className: "chip-success" },
+  pending: { label: "Pending", className: "chip-pending" },
+  failed: { label: "Failed", className: "chip-failed" },
 };
 
-const CURRENCY_SYMBOL = { EGP: "ج.م", USD: "$" };
+const CURRENCY_SYMBOL = { EGP: "EGP", USD: "$" };
 
 export default function MyDonations() {
   const [page, setPage] = useState(1);
@@ -57,10 +57,10 @@ export default function MyDonations() {
   return (
     <div className="page">
       <div className="page-header">
-        <h1>تبرعاتي</h1>
+        <h1>My Donations</h1>
       </div>
 
-      {loading && <p className="empty-state">بيتم التحميل...</p>}
+      {loading && <p className="empty-state">Loading...</p>}
 
       {!loading && result && (
         <>
@@ -68,35 +68,35 @@ export default function MyDonations() {
             <>
               <Reveal className="dash-grid">
                 <div className="kpi-card">
-                  <span className="kpi-label">إجمالي الصفحة (نجح فقط)</span>
+                  <span className="kpi-label">Total on Page (Successful Only)</span>
                   <bdi className="kpi-value">
-                    {totalOnPage.toLocaleString("ar-EG")} ج.م
+                    {totalOnPage.toLocaleString("en-EG")} EGP
                   </bdi>
                 </div>
                 <div className="kpi-card">
-                  <span className="kpi-label">عدد التبرعات الناجحة</span>
+                  <span className="kpi-label">Successful Donations</span>
                   <div className="kpi-value">{successful.length}</div>
                 </div>
                 <div className="kpi-card">
-                  <span className="kpi-label">أكبر تبرع</span>
+                  <span className="kpi-label">Largest Donation</span>
                   <bdi className="kpi-value">
-                    {largest.toLocaleString("ar-EG")} ج.م
+                    {largest.toLocaleString("en-EG")} EGP
                   </bdi>
                 </div>
                 <div className="kpi-card">
-                  <span className="kpi-label">متوسط التبرع</span>
+                  <span className="kpi-label">Average Donation</span>
                   <bdi className="kpi-value">
                     {successful.length
-                      ? (totalOnPage / successful.length).toLocaleString("ar-EG")
+                      ? (totalOnPage / successful.length).toLocaleString("en-EG")
                       : "—"}{" "}
-                    ج.م
+                    EGP
                   </bdi>
                 </div>
               </Reveal>
 
               {byProject.length > 1 && (
                 <Reveal className="panel-card chart-box">
-                  <h3>توزيع تبرعاتي حسب المشروع</h3>
+                  <h3>My Donations by Project</h3>
                   <div style={{ height: 300 }}>
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
@@ -115,7 +115,7 @@ export default function MyDonations() {
                           ))}
                         </Pie>
                         <Tooltip
-                          formatter={(v) => `${Number(v).toLocaleString("ar-EG")} ج.م`}
+                          formatter={(v) => `${Number(v).toLocaleString("en-EG")} EGP`}
                           contentStyle={{
                             background: "var(--surface-card, #fff)",
                             border: "1px solid var(--line, #e2e8f0)",
@@ -143,7 +143,7 @@ export default function MyDonations() {
             <div style={{ marginTop: 24 }}>
               {donations.map((d, idx) => {
                 const status = STATUS_META[d.status] || STATUS_META.pending;
-                const symbol = CURRENCY_SYMBOL[d.currency] || "ج.م";
+                const symbol = CURRENCY_SYMBOL[d.currency] || "EGP";
                 return (
                   <div className="donation-row" key={idx}>
                     <div className="thumb">
@@ -154,11 +154,11 @@ export default function MyDonations() {
                         {d.project_title}
                       </Link>
                       <div className="donation-meta">
-                        <bdi>{new Date(d.created_at).toLocaleDateString("ar-EG")}</bdi>
+                        <bdi>{new Date(d.created_at).toLocaleDateString("en-EG")}</bdi>
                         <span className={`status-chip ${status.className}`}>{status.label}</span>
                         {d.payment_method && (
                           <span className="hint" dir="ltr">
-                           بطاقة <bdi>•••• {d.payment_method}</bdi>
+                           Card <bdi>•••• {d.payment_method}</bdi>
                           </span>
                         )}
                         {d.status === "successful" && d.transaction_id && (
@@ -169,14 +169,14 @@ export default function MyDonations() {
                       </div>
                     </div>
                     <div className="amount">
-                      <bdi>{Number(d.amount).toLocaleString("ar-EG")}</bdi> {symbol}
+                      <bdi>{Number(d.amount).toLocaleString("en-EG")}</bdi> {symbol}
                     </div>
                   </div>
                 );
               })}
             </div>
           ) : (
-            <p className="empty-state">لسه ماتبرعتش لأي مشروع.</p>
+            <p className="empty-state">You haven't donated to any project yet.</p>
           )}
           <Pagination
             page={page}

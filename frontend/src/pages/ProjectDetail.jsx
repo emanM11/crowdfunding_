@@ -90,9 +90,9 @@ export default function ProjectDetail() {
   if (notFound) {
     return (
       <div className="page" style={{ textAlign: "center" }}>
-        <h1 className="section-heading">المشروع ده مش موجود</h1>
+        <h1 className="section-heading">This project does not exist</h1>
         <Link to="/projects" className="btn btn-outline">
-          كل المشاريع
+          All Projects
         </Link>
       </div>
     );
@@ -126,10 +126,10 @@ export default function ProjectDetail() {
   const handleRate = async (value) => {
     try {
       await rateProject(project.id, value);
-      notifySuccess("تم تسجيل تقييمك.");
+      notifySuccess("Your rating has been submitted.");
       load();
     } catch {
-      notifyError("مقدرناش نسجّل التقييم.");
+      notifyError("We couldn't submit your rating.");
     }
   };
 
@@ -138,10 +138,10 @@ export default function ProjectDetail() {
     try {
       await cancelProject(project.id);
       setConfirmingCancel(false);
-      notifySuccess("تم إلغاء المشروع.");
+      notifySuccess("Project cancelled successfully.");
       load();
     } catch (err) {
-      setCancelError(err.response?.data?.detail || "مقدرناش نلغي المشروع دلوقتي.");
+      setCancelError(err.response?.data?.detail || "We couldn't cancel the project right now.");
     }
   };
 
@@ -152,27 +152,27 @@ export default function ProjectDetail() {
       await reportContent({ project: project.id, reason: reportReason.trim() });
       setReporting(false);
       setReportReason("");
-      notifySuccess("تم إرسال البلاغ، شكرًا لك.");
+      notifySuccess("Report submitted successfully. Thank you.");
     } catch {
-      notifyError("مقدرناش نرسل البلاغ، حاول تاني.");
+      notifyError("We couldn't submit the report. Please try again.");
     }
   };
 
   const handlePostUpdate = async (e) => {
     e.preventDefault();
     if (!updateTitle.trim() || !updateBody.trim()) {
-      notifyError("اكتب عنوان ووصف التحديث.");
+      notifyError("Enter a title and description for the update.");
       return;
     }
     setPostingUpdate(true);
     try {
       await addProjectUpdate(project.id, { title: updateTitle.trim(), body: updateBody.trim() });
-      notifySuccess("تم نشر التحديث.");
+      notifySuccess("Update published successfully.");
       setUpdateTitle("");
       setUpdateBody("");
       load();
     } catch {
-      notifyError("مقدرناش ننشر التحديث.");
+      notifyError("We couldn't publish the update.");
     } finally {
       setPostingUpdate(false);
     }
@@ -182,7 +182,7 @@ export default function ProjectDetail() {
     e.preventDefault();
     const value = Number(tierAmount);
     if (!tierTitle.trim() || !value || value <= 0) {
-      notifyError("اكتب عنوان ومبلغ صحيح للمستوى.");
+      notifyError("Enter a valid title and amount for the reward tier.");
       return;
     }
     setPostingTier(true);
@@ -192,22 +192,22 @@ export default function ProjectDetail() {
         description: tierDesc.trim() || tierTitle.trim(),
         amount: value.toFixed(2),
       });
-      notifySuccess("تم إضافة مستوى المكافأة.");
+      notifySuccess("Reward tier added successfully.");
       setTierTitle("");
       setTierDesc("");
       setTierAmount("");
       load();
     } catch {
-      notifyError("مقدرناش نضيف المستوى.");
+      notifyError("We couldn't add the reward tier.");
     } finally {
       setPostingTier(false);
     }
   };
 
   const tabs = [
-    { key: "story", label: "قصة المشروع", icon: BookOpen, badge: null },
-    { key: "updates", label: "التحديثات", icon: History, badge: updates.length },
-    { key: "rewards", label: "مستويات الدعم", icon: Gift, badge: rewards.length },
+    { key: "story", label: "Project Story", icon: BookOpen, badge: null },
+    { key: "updates", label: "Updates", icon: History, badge: updates.length },
+    { key: "rewards", label: "Support Tiers", icon: Gift, badge: rewards.length },
   ];
 
   return (
@@ -218,7 +218,7 @@ export default function ProjectDetail() {
             {images.length ? (
               <img src={images[activeImage].image} alt={project.title} />
             ) : (
-              "لا توجد صورة"
+              "No Image Available"
             )}
           </div>
           {images.length > 1 && (
@@ -241,7 +241,7 @@ export default function ProjectDetail() {
             {daysLeft !== null && daysLeft !== undefined && (
               <span className="days-left">
                 <CalendarDays size={14} />
-                متبقي <bdi>{daysLeft}</bdi> يوم
+                <bdi>{daysLeft}</bdi> days left
               </span>
             )}
             <span>
@@ -316,7 +316,7 @@ export default function ProjectDetail() {
                     ))}
                   </div>
                 ) : (
-                  <p className="empty-state">لسه مفيش تحديثات من صاحب المشروع.</p>
+                  <p className="empty-state">No updates from the project creator yet.</p>
                 )
               )}
 
@@ -331,15 +331,15 @@ export default function ProjectDetail() {
                         style={{}}
                       >
                         <span className="reward-amount">
-                          <bdi>{Number(r.amount).toLocaleString("en-US")}</bdi> ج.م
+                          <bdi>{Number(r.amount).toLocaleString("en-US")}</bdi> EGP
                         </span>
                         <h4>{r.title}</h4>
                         <p>{r.description}</p>
                         <span className="reward-meta">
                           <span>
                             {r.quantity != null
-                              ? `متبقي ${Math.max(0, r.quantity)} مكان`
-                              : "عدد غير محدود"}
+                              ? `${Math.max(0, r.quantity)} spots remaining`
+                              : "Unlimited quantity"}
                           </span>
                           <span>{r.estimated_delivery}</span>
                         </span>
@@ -347,7 +347,7 @@ export default function ProjectDetail() {
                     ))}
                   </div>
                 ) : (
-                  <p className="empty-state">لسه مفيش مستويات دعم مضافة.</p>
+                  <p className="empty-state">No support tiers have been added yet.</p>
                 )
               )}
             </motion.div>
@@ -356,20 +356,20 @@ export default function ProjectDetail() {
           {isCreator && (
             <div style={{ display: "flex", gap: 10, marginTop: 22 }}>
               <button className="btn btn-outline" onClick={() => navigate(`/projects/${project.id}/edit`)}>
-                تعديل المشروع
+                Edit Project
               </button>
               {canCancel && !confirmingCancel && (
                 <button className="btn btn-outline" onClick={() => setConfirmingCancel(true)}>
-                  إلغاء المشروع
+                  Cancel Project
                 </button>
               )}
               {confirmingCancel && (
                 <>
                   <button className="btn btn-primary" onClick={handleCancel}>
-                    متأكد؟ إلغاء نهائي
+                    Confirm? Cancel Permanently
                   </button>
                   <button className="btn btn-ghost" style={{ color: "var(--ink-600)" }} onClick={() => setConfirmingCancel(false)}>
-                    تراجع
+                    Go Back
                   </button>
                 </>
               )}
@@ -380,36 +380,36 @@ export default function ProjectDetail() {
           {isCreator && (
             <>
               <details className="panel-card">
-                <summary>إضافة تحديث جديد</summary>
+                <summary>Add New Update</summary>
                 <div className="field">
-                  <label>العنوان</label>
-                  <input className="input" value={updateTitle} onChange={(e) => setUpdateTitle(e.target.value)} placeholder="مثال: خطوة جديدة في التنفيذ" />
+                  <label>Title</label>
+                  <input className="input" value={updateTitle} onChange={(e) => setUpdateTitle(e.target.value)} placeholder="Example: A new implementation step" />
                 </div>
                 <div className="field">
-                  <label>التفاصيل</label>
-                  <textarea className="input" rows={4} value={updateBody} onChange={(e) => setUpdateBody(e.target.value)} placeholder="اكتب التحديث بالتفصيل..." />
+                  <label>Details</label>
+                  <textarea className="input" rows={4} value={updateBody} onChange={(e) => setUpdateBody(e.target.value)} placeholder="Write the update in detail..." />
                 </div>
                 <button className="btn btn-primary" disabled={postingUpdate} onClick={handlePostUpdate}>
-                  {postingUpdate ? "بيتم النشر..." : "نشر التحديث"}
+                  {postingUpdate ? "Publishing..." : "Publish Update"}
                 </button>
               </details>
 
               <details className="panel-card">
-                <summary>إضافة مستوى دعم</summary>
+                <summary>Add Support Tier</summary>
                 <div className="field">
-                  <label>العنوان</label>
-                  <input className="input" value={tierTitle} onChange={(e) => setTierTitle(e.target.value)} placeholder="مثال: بطاقة شكر خاصة" />
+                  <label>Title</label>
+                  <input className="input" value={tierTitle} onChange={(e) => setTierTitle(e.target.value)} placeholder="Example: Special Thank You Card" />
                 </div>
                 <div className="field">
-                  <label>الوصف</label>
-                  <textarea className="input" rows={3} value={tierDesc} onChange={(e) => setTierDesc(e.target.value)} placeholder="الوصف التفصيلي للمستوى..." />
+                  <label>Description</label>
+                  <textarea className="input" rows={3} value={tierDesc} onChange={(e) => setTierDesc(e.target.value)} placeholder="Detailed description of the tier..." />
                 </div>
                 <div className="field">
-                  <label>المبلغ (ج.م)</label>
+                  <label>Amount (EGP)</label>
                   <input type="number" min="1" className="input" value={tierAmount} onChange={(e) => setTierAmount(e.target.value)} />
                 </div>
                 <button className="btn btn-primary" disabled={postingTier} onClick={handlePostTier}>
-                  {postingTier ? "بيتم الإضافة..." : "إضافة المستوى"}
+                  {postingTier ? "Adding..." : "Add Tier"}
                 </button>
               </details>
             </>
@@ -420,12 +420,12 @@ export default function ProjectDetail() {
               {!reporting ? (
                 <button className="comment-actions" style={{ background: "none", border: "none", color: "var(--danger)", cursor: "pointer", fontSize: "0.82rem", alignItems: "center", display: "inline-flex", gap: 6 }} onClick={() => setReporting(true)}>
                   <Flag size={14} />
-                  الإبلاغ عن هذا المشروع
+                  Report this project
                 </button>
               ) : (
                 <form className="reply-form" onSubmit={handleReport}>
-                  <input className="input" placeholder="سبب الإبلاغ..." value={reportReason} onChange={(e) => setReportReason(e.target.value)} autoFocus />
-                  <button className="btn btn-outline">إرسال</button>
+                  <input className="input" placeholder="Reason for reporting..." value={reportReason} onChange={(e) => setReportReason(e.target.value)} autoFocus />
+                  <button className="btn btn-outline">Send</button>
                 </form>
               )}
             </div>
@@ -433,7 +433,7 @@ export default function ProjectDetail() {
 
           {project.similar_projects?.length > 0 && (
             <div className="section" style={{ paddingInline: 0 }}>
-              <h2 className="section-heading">مشاريع مشابهة</h2>
+              <h2 className="section-heading">Similar Projects</h2>
               <div className="similar-grid">
                 {project.similar_projects.map((p) => (
                   <ProjectCard key={p.id} project={p} />
@@ -447,10 +447,10 @@ export default function ProjectDetail() {
 
         <aside className="donate-card">
           <div className="raised">
-            <bdi>{raised.toLocaleString("ar-EG")}</bdi> ج.م
+            <bdi>{raised.toLocaleString("ar-EG")}</bdi> EGP
           </div>
           <div className="target">
-            من هدف <bdi>{target.toLocaleString("ar-EG")}</bdi> ج.م — <bdi>{pct}%</bdi>
+            of <bdi>{target.toLocaleString("ar-EG")}</bdi> EGP — <bdi>{pct}%</bdi>
           </div>
           <div className="progress-track">
             <div className="progress-fill" style={{ width: `${pct}%` }} />
@@ -459,48 +459,48 @@ export default function ProjectDetail() {
             {updates.length ? (
               <>
                 <History size={12} style={{ verticalAlign: "middle", marginInlineEnd: 4 }} />
-                {updates.length} تحديث {updates.length > 1 ? "حتى الآن" : "واحد"}
+                {updates.length} {updates.length > 1 ? "updates so far" : "update"}
               </>
             ) : null}
           </div>
 
           {canDonate && (
             <button className="btn btn-primary btn-block" style={{ marginTop: 18 }} onClick={handleDonate}>
-              تبرع الآن
+              Donate Now
             </button>
           )}
 
           {!user && (
             <Link to="/login" className="btn btn-primary btn-block" style={{ marginTop: 18 }}>
-              سجّل دخول للتبرع
+              Log In to Donate
             </Link>
           )}
 
           {user && isCreator && (
             <p style={{ marginTop: 18, fontSize: "0.82rem", color: "var(--ink-600)" }}>
-              دي حملتك — مينفعش تتبرع لمشروعك.
+              This is your campaign — you cannot donate to your own project.
             </p>
           )}
 
           {user && !isCreator && project.status !== "running" && (
             <p style={{ marginTop: 18, fontSize: "0.82rem", color: "var(--ink-600)" }}>
-              الحملة دي مش بتستقبل تبرعات دلوقتي.
+              This campaign is not accepting donations right now.
             </p>
           )}
 
           {user && (
             <div style={{ marginTop: 20 }}>
-              <p style={{ fontSize: "0.82rem", fontWeight: 600, marginBottom: 6 }}>قيّم المشروع</p>
+              <p style={{ fontSize: "0.82rem", fontWeight: 600, marginBottom: 6 }}>Rate this project</p>
               <StarRating value={project.my_rating || 0} onRate={handleRate} />
             </div>
           )}
 
           <div className="stats-row">
             <span>
-              يبدأ <bdi>{formatDate(project.start_date)}</bdi>
+              Starts <bdi>{formatDate(project.start_date)}</bdi>
             </span>
             <span>
-              ينتهي <bdi>{formatDate(project.end_date)}</bdi>
+              Ends <bdi>{formatDate(project.end_date)}</bdi>
             </span>
           </div>
         </aside>

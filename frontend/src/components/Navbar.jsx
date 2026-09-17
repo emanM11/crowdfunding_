@@ -22,7 +22,7 @@ export default function Navbar() {
   const handleLogout = () => {
     logout();
     setOpen(false);
-    notifySuccess("تم تسجيل الخروج.");
+    notifySuccess("Logged out successfully.");
     navigate("/");
   };
 
@@ -33,49 +33,52 @@ export default function Navbar() {
       <div className="container navbar-inner">
         <Link to="/" className="brand" onClick={close}>
           <span className="dot" />
-          تكاتف
+          Takatof
         </Link>
 
         <nav className={`nav-links${open ? " open" : ""}`}>
+          <Link to="/" onClick={close}>
+            Home
+          </Link>
           <Link to="/projects" onClick={close}>
-            استكشف المشاريع
+            Explore Projects
           </Link>
           {user ? (
             <>
               <Link to="/my-projects" onClick={close}>
-                مشاريعي
+                My Projects
               </Link>
               <Link to="/my-donations" onClick={close}>
-                تبرعاتي
+                My Donations
               </Link>
               <Link to="/profile" onClick={close}>
-                حسابي
+                My Account
               </Link>
               <button className="btn btn-ghost" onClick={handleLogout}>
-                تسجيل خروج
+                Log Out
               </button>
               <Link to="/projects/new" className="btn btn-primary" onClick={close}>
-                ابدأ حملة
+                Start a Campaign
               </Link>
             </>
           ) : (
             <>
               <Link to="/login" onClick={close}>
-                تسجيل الدخول
+                Log In
               </Link>
               <Link to="/register" className="btn btn-primary" onClick={close}>
-                إنشاء حساب
+                Create Account
               </Link>
             </>
           )}
-          <button className="theme-toggle" onClick={toggle} aria-label="تبديل المظهر" title="تبديل المظهر">
+          <button className="theme-toggle" onClick={toggle} aria-label="Toggle theme" title="Toggle theme">
             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
           </button>
         </nav>
 
         <button
           className="nav-toggle"
-          aria-label="القائمة"
+          aria-label="Menu"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >

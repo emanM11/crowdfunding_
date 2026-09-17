@@ -39,10 +39,10 @@ export default function MyProjects() {
     try {
       await cancelProject(id);
       setConfirmingId(null);
-      notifySuccess("تم إلغاء المشروع.");
+      notifySuccess("Project cancelled successfully.");
       load();
     } catch (err) {
-      setCancelError(err.response?.data?.detail || "مقدرناش نلغي المشروع دلوقتي.");
+      setCancelError(err.response?.data?.detail || "We couldn't cancel the project right now.");
     }
   };
 
@@ -63,16 +63,16 @@ export default function MyProjects() {
 
   const chartData = projects.slice(0, 9).map((p) => ({
     name: p.title.length > 14 ? `${p.title.slice(0, 14)}…` : p.title,
-    "تم جمعه": Number(p.total_donations) || 0,
-    "الهدف": Number(p.total_target) || 0,
+    "Raised": Number(p.total_donations) || 0,
+    "Target": Number(p.total_target) || 0,
   }));
 
   return (
     <div className="page">
       <div className="page-header">
-        <h1>مشاريعي</h1>
+        <h1>My Projects</h1>
         <Link to="/projects/new" className="btn btn-primary">
-          ابدأ حملة جديدة
+          Start a New Campaign
         </Link>
       </div>
 
@@ -82,23 +82,23 @@ export default function MyProjects() {
         <>
           <Reveal className="dash-grid">
             <div className="kpi-card">
-              <span className="kpi-label">تم جمعه ({projects.length} مشروع)</span>
+              <span className="kpi-label">Raised ({projects.length} projects)</span>
               <bdi className="kpi-value">
-                {stats.raised.toLocaleString("ar-EG")} ج.م
+                {stats.raised.toLocaleString("en-EG")} EGP
               </bdi>
             </div>
             <div className="kpi-card">
-              <span className="kpi-label">إجمالي الأهداف</span>
+              <span className="kpi-label">Total Targets</span>
               <bdi className="kpi-value">
-                {stats.target.toLocaleString("ar-EG")} ج.م
+                {stats.target.toLocaleString("en-EG")} EGP
               </bdi>
             </div>
             <div className="kpi-card">
-              <span className="kpi-label">حملات نشطة</span>
+              <span className="kpi-label">Active Campaigns</span>
               <div className="kpi-value">{stats.active}</div>
             </div>
             <div className="kpi-card">
-              <span className="kpi-label">متوسط الإنجاز</span>
+              <span className="kpi-label">Average Progress</span>
               <div className="kpi-value">
                 <bdi>{avgPct}%</bdi>
               </div>
@@ -107,7 +107,7 @@ export default function MyProjects() {
 
           {projects.length > 1 && (
             <Reveal className="panel-card chart-box">
-              <h3>التحصيل مقابل الهدف</h3>
+              <h3>Raised vs. Target</h3>
               <div style={{ height: 280 }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
@@ -122,7 +122,7 @@ export default function MyProjects() {
                     />
                     <YAxis tick={{ fontSize: 11, fill: "var(--ink-500, #64748b)" }} width={46} />
                     <Tooltip
-                      formatter={(v) => Number(v).toLocaleString("ar-EG")}
+                      formatter={(v) => Number(v).toLocaleString("en-EG")}
                       labelStyle={{ fontSize: 12 }}
                       contentStyle={{
                         background: "var(--surface-card, #fff)",
@@ -131,8 +131,8 @@ export default function MyProjects() {
                         fontSize: 12,
                       }}
                     />
-                    <Bar dataKey="تم جمعه" fill={RAISE_COLOR} radius={[5, 5, 0, 0]} />
-                    <Bar dataKey="الهدف" fill={TARGET_COLOR} radius={[5, 5, 0, 0]} />
+                    <Bar dataKey="Raised" fill={RAISE_COLOR} radius={[5, 5, 0, 0]} />
+                    <Bar dataKey="Target" fill={TARGET_COLOR} radius={[5, 5, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -141,7 +141,7 @@ export default function MyProjects() {
         </>
       )}
 
-      {loading && <p className="empty-state">بيتم التحميل...</p>}
+      {loading && <p className="empty-state">Loading...</p>}
 
       {!loading && result && (
         <>
@@ -165,27 +165,27 @@ export default function MyProjects() {
                         <div className="progress-fill" style={{ width: `${Math.min(100, pct)}%` }} />
                       </div>
                       <div style={{ fontSize: "0.8rem", color: "var(--ink-600)", marginTop: 4 }}>
-                        <bdi>{raised.toLocaleString("ar-EG")}</bdi> / <bdi>{target.toLocaleString("ar-EG")}</bdi> ج.م
+                        <bdi>{raised.toLocaleString("en-EG")}</bdi> / <bdi>{target.toLocaleString("en-EG")}</bdi> EGP
                         {"  "}
                         <StatusBadge status={p.status} />
                       </div>
                     </div>
                     <div style={{ display: "flex", gap: 8 }}>
                       <Link to={`/projects/${p.id}/edit`} className="btn btn-outline">
-                        تعديل
+                        Edit
                       </Link>
                       {canCancel && confirmingId !== p.id && (
                         <button className="btn btn-outline" onClick={() => setConfirmingId(p.id)}>
-                          إلغاء
+                          Cancel
                         </button>
                       )}
                       {canCancel && confirmingId === p.id && (
                         <>
                           <button className="btn btn-primary" onClick={() => handleCancel(p.id)}>
-                            تأكيد الإلغاء
+                            Confirm Cancellation
                           </button>
                           <button className="btn btn-ghost" style={{ color: "var(--ink-600)" }} onClick={() => setConfirmingId(null)}>
-                            تراجع
+                            Go Back
                           </button>
                         </>
                       )}
@@ -195,7 +195,7 @@ export default function MyProjects() {
               })}
             </div>
           ) : (
-            <p className="empty-state">لسه معملتش أي مشروع.</p>
+            <p className="empty-state">You haven't created any projects yet.</p>
           )}
           <Pagination
             page={page}

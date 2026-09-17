@@ -1,7 +1,7 @@
 const LABELS = {
-  running: "شغّال",
-  ended: "انتهى",
-  cancelled: "اتلغى",
+  running: "Running",
+  ended: "Ended",
+  cancelled: "Cancelled",
 };
 
 export default function StatusBadge({ status }) {

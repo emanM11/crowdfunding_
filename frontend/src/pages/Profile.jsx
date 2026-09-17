@@ -41,7 +41,7 @@ export default function Profile() {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
-      setErrors((err) => ({ ...err, profile_picture: "الصورة أكبر من 5 ميجابايت." }));
+      setErrors((err) => ({ ...err, profile_picture: "The image is larger than 5 MB." }));
       return;
     }
     setAvatarFile(file);
@@ -75,7 +75,7 @@ export default function Profile() {
         });
         setErrors(fieldErrors);
       } else {
-        setFormError("مقدرناش نحفظ التعديلات دلوقتي.");
+        setFormError("We couldn't save the changes right now.");
       }
     } finally {
       setSaving(false);
@@ -91,34 +91,34 @@ export default function Profile() {
       navigate("/");
     } catch (err) {
       if (err.response?.status === 400) {
-        setDeleteError(err.response.data?.password?.[0] || "كلمة المرور غلط.");
+        setDeleteError(err.response.data?.password?.[0] || "Incorrect password.");
       } else {
-        setDeleteError("مقدرناش نحذف الحساب دلوقتي.");
+        setDeleteError("We couldn't delete the account right now.");
       }
     }
   };
 
-  if (loading || !form) return <div className="page">بيتم التحميل...</div>;
+  if (loading || !form) return <div className="page">Loading...</div>;
 
   return (
     <div className="page" style={{ maxWidth: 560 }}>
-      <h1 className="section-heading">حسابي</h1>
+      <h1 className="section-heading">My Profile</h1>
 
       <form onSubmit={handleSave} noValidate>
         {formError && <div className="form-alert">{formError}</div>}
-        {saved && <div className="form-alert success">اتحفظت التعديلات.</div>}
+        {saved && <div className="form-alert success">Changes saved successfully.</div>}
 
         <div className="avatar-picker">
           <div className="avatar-preview">
             {avatarPreview || form.profile_picture ? (
               <img src={avatarPreview || form.profile_picture} alt="" />
             ) : (
-              "صورة"
+              "Photo"
             )}
           </div>
           <div>
             <label htmlFor="avatar" className="btn btn-outline" style={{ cursor: "pointer" }}>
-              تغيير الصورة
+              Change Photo
             </label>
             <input id="avatar" type="file" accept="image/*" onChange={handleAvatar} style={{ display: "none" }} />
             {errors.profile_picture && <p className="field-error">{errors.profile_picture}</p>}
@@ -127,72 +127,72 @@ export default function Profile() {
 
         <div className="two-col">
           <div className="field">
-            <label>الاسم الأول</label>
+            <label>First Name</label>
             <input className="input" value={form.first_name} onChange={update("first_name")} />
           </div>
           <div className="field">
-            <label>الاسم الأخير</label>
+            <label>Last Name</label>
             <input className="input" value={form.last_name} onChange={update("last_name")} />
           </div>
         </div>
 
         <div className="field">
-          <label>الإيميل</label>
+          <label>Email</label>
           <input className="input" value={form.email} disabled style={{ background: "var(--sand-100)", color: "var(--ink-400)" }} />
-          <p className="hint">الإيميل مينفعش يتغيّر.</p>
+          <p className="hint">Email cannot be changed.</p>
         </div>
 
         <div className="field">
-          <label>رقم الموبايل</label>
+          <label>Phone Number</label>
           <input className={`input${errors.phone_number ? " has-error" : ""}`} value={form.phone_number} onChange={update("phone_number")} />
           {errors.phone_number && <p className="field-error">{errors.phone_number}</p>}
         </div>
 
         <div className="two-col">
           <div className="field">
-            <label>تاريخ الميلاد (اختياري)</label>
+            <label>Date of Birth (Optional)</label>
             <input type="date" className="input" value={form.birthdate || ""} onChange={update("birthdate")} />
           </div>
           <div className="field">
-            <label>الدولة (اختياري)</label>
+            <label>Country (Optional)</label>
             <input className="input" value={form.country || ""} onChange={update("country")} />
           </div>
         </div>
 
         <div className="field">
-          <label>رابط فيسبوك (اختياري)</label>
+          <label>Facebook Profile Link (Optional)</label>
           <input className="input" value={form.facebook_profile || ""} onChange={update("facebook_profile")} />
         </div>
 
         <button className="btn btn-primary" disabled={saving}>
-          {saving ? "بيتم الحفظ..." : "حفظ التعديلات"}
+          {saving ? "Saving..." : "Save Changes"}
         </button>
       </form>
 
       <div className="danger-zone">
-        <h3>حذف الحساب</h3>
-        <p>الإجراء ده نهائي. بياناتك الشخصية هتتشال، بس مشاريعك وتبرعاتك هتفضل متسجلة.</p>
+        <h3>Delete Account</h3>
+        <p>This action is permanent. Your personal data will be removed, but your projects and donations will remain recorded.</p>
         {deleteError && <div className="form-alert">{deleteError}</div>}
         {!confirmingDelete ? (
           <button className="btn btn-outline" style={{ borderColor: "var(--danger)", color: "var(--danger)" }} onClick={() => setConfirmingDelete(true)}>
-            حذف حسابي
+            Delete My Account
           </button>
         ) : (
           <form onSubmit={handleDelete} style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 320 }}>
             <input
               type="password"
               className="input"
-              placeholder="اكتب كلمة المرور للتأكيد"
+              placeholder="Enter your password to confirm"
               value={deletePassword}
               onChange={(e) => setDeletePassword(e.target.value)}
               autoFocus
             />
             <div style={{ display: "flex", gap: 10 }}>
               <button className="btn btn-primary" style={{ background: "var(--danger)", color: "#fff" }} disabled={!deletePassword}>
-                متأكد، احذف الحساب نهائيًا
+                Yes, Delete My Account Permanently
               </button>
               <button type="button" className="btn btn-ghost" style={{ color: "var(--ink-600)" }} onClick={() => setConfirmingDelete(false)}>
-                تراجع
+                Cancel
               </button>
             </div>
           </form>

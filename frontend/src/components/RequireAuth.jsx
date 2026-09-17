@@ -12,7 +12,7 @@ export default function RequireAuth({ children }) {
   if (loading) {
     return (
       <div className="page">
-        <p className="empty-state">بيتم التحميل...</p>
+        <p className="empty-state">Loading...</p>
       </div>
     );
   }

@@ -19,6 +19,7 @@ export default function CategoryProjects() {
   useEffect(() => {
     setLoading(true);
     setError(false);
+
     categoryProjects(slug, page)
       .then(({ data }) => setResult(data))
       .catch(() => setError(true))
@@ -28,18 +29,25 @@ export default function CategoryProjects() {
   return (
     <div className="page">
       <div className="page-header">
-        <h1>مشاريع {decodeURIComponent(slug)}</h1>
+        <h1>Explore {decodeURIComponent(slug)} Projects</h1>
       </div>
 
       {error && (
         <div className="err-state">
-          <h3>مقدرناش نجيب المشاريع</h3>
-          <p>حصلت مشكلة في الاتصال، حاول تاني بعد شوية.</p>
-          <button className="btn btn-outline" onClick={() => setRetry((r) => r + 1)}>
-            إعادة المحاولة
+          <h3>Unable to Load Projects</h3>
+          <p>
+            We couldn't connect to the server. Please try again in a moment.
+          </p>
+
+          <button
+            className="btn btn-outline"
+            onClick={() => setRetry((r) => r + 1)}
+          >
+            Try Again
           </button>
         </div>
       )}
+
       {loading && (
         <div className="skeleton-grid">
           {[1, 2, 3, 4, 5, 6].map((n) => (
@@ -63,8 +71,11 @@ export default function CategoryProjects() {
               ))}
             </div>
           ) : (
-            <p className="empty-state">لسه مفيش مشاريع في الفئة دي.</p>
+            <p className="empty-state">
+              No projects are available in this category yet.
+            </p>
           )}
+
           <Pagination
             page={page}
             setPage={setPage}

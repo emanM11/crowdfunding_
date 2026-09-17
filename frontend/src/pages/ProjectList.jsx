@@ -22,15 +22,15 @@ export default function ProjectList() {
   return (
     <div className="page">
       <div className="page-header">
-        <h1>كل المشاريع</h1>
+        <h1>All Projects</h1>
       </div>
 
       {error && (
         <div className="err-state">
-          <h3>مقدرناش نجيب المشاريع</h3>
-          <p>حصلت مشكلة في الاتصال، حاول تاني بعد شوية.</p>
+          <h3>We couldn't load the projects</h3>
+          <p>There was a connection problem. Please try again later.</p>
           <button className="btn btn-outline" onClick={() => setRetry((r) => r + 1)}>
-            إعادة المحاولة
+            Try Again
           </button>
         </div>
       )}
@@ -57,7 +57,7 @@ export default function ProjectList() {
               ))}
             </div>
           ) : (
-            <p className="empty-state">لسه مفيش مشاريع.</p>
+            <p className="empty-state">No projects available yet.</p>
           )}
           <Pagination
             page={page}
